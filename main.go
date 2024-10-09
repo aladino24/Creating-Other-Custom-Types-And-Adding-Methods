@@ -16,7 +16,7 @@ func main() {
 		return
 	}
 
-	userNote.Title
+	userNote.Display()
 }
 
 func getNoteData() (string, string, error) {
