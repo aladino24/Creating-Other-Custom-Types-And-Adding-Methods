@@ -11,10 +11,29 @@ import (
 )
 
 type saver interface {
-	Save(int, string) error
+	Save() error
 }
 
+// type displayer interface {
+// 	Display() error
+// }
+
+type outputtable interface {
+	saver
+	Display()
+	DoSomething(int) string
+}
+
+// type outputtable interface {
+// 	Save() error
+// 	Display()
+// }
+
 func main() {
+	printSomething(1)
+	printSomething(1.5)
+	printSomething("Hello")
+
 	title, content := getNoteData()
 	todoText := getUserInput("Todo text: ")
 
@@ -25,6 +44,8 @@ func main() {
 		return
 	}
 
+	printSomething(todo)
+
 	userNote, err := note.New(title, content)
 
 	if err != nil {
@@ -32,29 +53,71 @@ func main() {
 		return
 	}
 
-	todo.Display()
-	err = userNote.Save()
+	// todo.Display()
+	// err = saveData(todo)
+	err = outputData(todo)
 
 	if err != nil {
 		fmt.Println("Saving the todo failed")
 		return
 	}
 
-	fmt.Println("Saving the todo succeeded!")
+	// userNote.Display()
+	// err = saveData(userNote)
+	outputData(userNote)
 
-	userNote.Display()
-	err = userNote.Save()
+	// if err != nil {
+	// 	return
+	// }
+}
+
+func printSomething(value interface{}) {
+	intVal, ok := value.(int)
+
+	if ok {
+		fmt.Println("Value is an integer:", intVal)
+	}
+
+	floatVal, ok := value.(float64)
+
+	if ok {
+		fmt.Println("Value is an float:", floatVal)
+	}
+
+	stringVal, ok := value.(string)
+
+	if ok {
+		fmt.Println("Value is an string:", stringVal)
+	}
+
+	// switch value.(type) {
+	// case int:
+	// 	fmt.Println("Integer: ", value)
+	// case float64:
+	// 	fmt.Println("Float: ", value)
+	// case string:
+	// 	fmt.Println("String: ", value)
+	// default:
+	// 	fmt.Println("Unknown type: ", value)
+	// }
+	// fmt.Println(value)
+}
+
+func outputData(data outputtable) error {
+	data.Display()
+	return saveData(data)
+}
+
+func saveData(data saver) error {
+	err := data.Save()
 
 	if err != nil {
 		fmt.Println("Saving the note failed")
-		return
+		return err
 	}
 
 	fmt.Println("Saving the note succeeded!")
-}
-
-func saveData(data note.Note) {
-
+	return nil
 }
 
 func getNoteData() (string, string) {

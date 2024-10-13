@@ -15,6 +15,11 @@ type Note struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+// DoSomething implements main.outputtable.
+func (note Note) DoSomething(int) string {
+	panic("unimplemented")
+}
+
 func (note Note) Display() {
 	fmt.Printf("Your not titled %v has the following content: \n\n%v\n\n", note.Title, note.Content)
 }

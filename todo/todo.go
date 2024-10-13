@@ -11,6 +11,11 @@ type Todo struct {
 	Text string `json:"text"`
 }
 
+// DoSomething implements main.outputtable.
+func (todo Todo) DoSomething(int) string {
+	panic("unimplemented")
+}
+
 func (todo Todo) Display() {
 	fmt.Println(todo.Text)
 }
